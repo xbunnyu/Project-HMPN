@@ -2,7 +2,13 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #0a0a0a;
+    /* ใส่รูปพื้นหลัง */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('BG.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,7 +19,7 @@ body {
 
 /* --- พื้นที่แสดงผล 3D --- */
 .gallery-viewport {
-    perspective: 3000px;
+    perspective: 8000px; /* เพิ่มความลึกให้สัมพันธ์กับขนาดวงกลม 95 ใบ */
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -62,8 +68,8 @@ body {
 
 /* 🌟 จุดสำคัญ: ถอยวงกลม (translateZ) ไปด้านหลังเท่ากับระยะรัศมี */
 @keyframes rotateLoop {
-    from { transform: translateZ(calc(-1px * var(--radius))) rotateY(0deg); }
-    to { transform: translateZ(calc(-1px * var(--radius))) rotateY(360deg); }
+    from { transform: translateZ(calc(-1 * var(--radius))) rotateY(0deg); }
+    to { transform: translateZ(calc(-1 * var(--radius))) rotateY(360deg); }
 }
 
 /* --- ข้อความด้านล่าง --- */
@@ -107,6 +113,8 @@ body {
     color: white;
     position: relative;
     animation: fadeIn 0.4s ease-out;
+    max-height: 90vh; /* จำจัดความสูงกันข้อความล้นจอ */
+    overflow-y: hidden;
 }
 
 .modal-body { 
@@ -122,6 +130,22 @@ body {
     border-radius: 12px; 
     border: 2px solid #d4af37; 
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+}
+
+/* ทำให้ข้อความใน Modal เลื่อน Scroll ได้ */
+.text-content {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+.text-content::-webkit-scrollbar {
+    width: 6px;
+}
+.text-content::-webkit-scrollbar-thumb {
+    background-color: #d4af37;
+    border-radius: 10px;
 }
 
 .text-content h2 { 
@@ -153,6 +177,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: 0.2s;
+    z-index: 10;
 }
 
 .close:hover { 
@@ -169,5 +194,6 @@ body {
 @media (max-width: 768px) {
     .modal-body { flex-direction: column; text-align: center; align-items: center; }
     .modal-body img { width: 100%; max-width: 250px; height: auto; }
+    .text-content { max-height: 300px; padding-right: 5px; text-align: left; }
     .footer-text { font-size: 1rem; letter-spacing: 5px; }
 }
