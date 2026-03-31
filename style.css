@@ -2,8 +2,8 @@
 body {
     margin: 0;
     padding: 0;
-    /* ใส่รูปพื้นหลัง */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('bg.png');
+    /* ตรวจสอบชื่อไฟล์ bg.png บน GitHub ให้ตรงกันเป๊ะ (ตัวเล็ก/ใหญ่) */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('img/bg.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -19,7 +19,7 @@ body {
 
 /* --- พื้นที่แสดงผล 3D --- */
 .gallery-viewport {
-    perspective: 8000px; /* เพิ่มความลึกให้สัมพันธ์กับขนาดวงกลม 95 ใบ */
+    perspective: 8000px; 
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -50,12 +50,12 @@ body {
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
     transition: 0.3s;
     background: #1a1a1a;
+    backface-visibility: hidden; /* ช่วยให้การแสดงผลบนมือถือลื่นขึ้น */
 }
 
 .card:hover {
     box-shadow: 0 0 40px rgba(212, 175, 55, 0.8);
     filter: brightness(1.2);
-    border-width: 3px;
     transform: scale(1.05);
 }
 
@@ -66,7 +66,7 @@ body {
     opacity: 0.9;
 }
 
-/* 🌟 จุดสำคัญ: ถอยวงกลม (translateZ) ไปด้านหลังเท่ากับระยะรัศมี */
+/* การหมุนวงกลมโดยอ้างอิงรัศมีจาก JS */
 @keyframes rotateLoop {
     from { transform: translateZ(calc(-1 * var(--radius))) rotateY(0deg); }
     to { transform: translateZ(calc(-1 * var(--radius))) rotateY(360deg); }
@@ -113,8 +113,8 @@ body {
     color: white;
     position: relative;
     animation: fadeIn 0.4s ease-out;
-    max-height: 90vh; /* จำจัดความสูงกันข้อความล้นจอ */
-    overflow-y: hidden;
+    max-height: 90vh;
+    overflow-y: auto; /* ให้เลื่อนดูเนื้อหาได้ถ้าจอเล็ก */
 }
 
 .modal-body { 
@@ -129,23 +129,7 @@ body {
     object-fit: cover;
     border-radius: 12px; 
     border: 2px solid #d4af37; 
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
     flex-shrink: 0;
-}
-
-/* ทำให้ข้อความใน Modal เลื่อน Scroll ได้ */
-.text-content {
-    max-height: 500px;
-    overflow-y: auto;
-    padding-right: 15px;
-}
-
-.text-content::-webkit-scrollbar {
-    width: 6px;
-}
-.text-content::-webkit-scrollbar-thumb {
-    background-color: #d4af37;
-    border-radius: 10px;
 }
 
 .text-content h2 { 
@@ -176,24 +160,93 @@ body {
     font-size: 40px;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.2s;
-    z-index: 10;
+}
+/* การจัดรูปแบบ Catalog ในเมนู */
+.catalog-category {
+    margin: 20px 0 10px;
+    border-left: 4px solid #d4af37;
+    padding-left: 15px;
+    color: #d4af37;
+    font-size: 1.5rem;
 }
 
-.close:hover { 
-    color: #fff; 
-    transform: scale(1.1);
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.catalog-item {
+    background: #222;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.catalog-item:hover {
+    border-color: #d4af37;
+    background: #333;
+}
+
+.catalog-item img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.catalog-item span {
+    font-size: 0.8rem;
+    display: block;
+    color: #eee;
+}
+
+/* --- การปรับแต่งสำหรับมือถือ (Mobile Responsive) --- */
+@media (max-width: 768px) {
+    .gallery-viewport {
+        perspective: 2000px; /* ลดระยะความลึกให้พอดีหน้าจอแคบ */
+    }
+
+    .spinner {
+        width: 150px; /* ลดขนาดการ์ดบนมือถือ */
+        height: 210px;
+    }
+
+    .card {
+        width: 150px;
+        height: 210px;
+    }
+
+    .modal-content {
+        width: 92%;
+        padding: 20px;
+        margin: 10% auto;
+    }
+
+    .modal-body {
+        flex-direction: column;
+        align-items: center;
+        text-align: left;
+    }
+
+    .modal-body img {
+        width: 200px;
+        height: 280px;
+        margin-bottom: 20px;
+    }
+
+    .footer-text {
+        font-size: 0.9rem;
+        letter-spacing: 4px;
+    }
 }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.9) translateY(20px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-/* รองรับมือถือ */
-@media (max-width: 768px) {
-    .modal-body { flex-direction: column; text-align: center; align-items: center; }
-    .modal-body img { width: 100%; max-width: 250px; height: auto; }
-    .text-content { max-height: 300px; padding-right: 5px; text-align: left; }
-    .footer-text { font-size: 1rem; letter-spacing: 5px; }
 }
